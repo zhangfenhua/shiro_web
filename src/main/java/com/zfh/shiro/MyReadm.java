@@ -19,27 +19,30 @@ public class MyReadm extends AuthorizingRealm {
      * @throws AuthenticationException
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    public AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String tokenPrincipal = (String) authenticationToken.getPrincipal();
 //        然后调用数据库通过username查询出用户对象
 
         AuthenticationInfo authenticationInfo = null;
-        if ("".equals(tokenPrincipal)) {
+        if ("zfh".equals(tokenPrincipal)) {
 //          验证            username    加密后数据库查询的密码   盐                        类名
             authenticationInfo = new SimpleAuthenticationInfo(
 //                        username    加密后数据库查询的密码         盐                        类名
-                    tokenPrincipal, "", ByteSource.Util.bytes(""), getName());
+                    "zfh", "e60ccf161d6bb276a8d0adcb8920be78", ByteSource.Util.bytes("abcd"), getName());
         }
+        System.out.println("认证");
         return authenticationInfo;
     }
 
     /**
      * 授权
+     *
      * @param principalCollection
      * @return
      */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+    public AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        System.out.println("授权");
         String primaryPrincipal = (String) principalCollection.getPrimaryPrincipal();
         /**
          * 然后根据主体查询角色，根据角色查询权限

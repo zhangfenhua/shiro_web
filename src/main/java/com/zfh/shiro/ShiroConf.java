@@ -22,13 +22,14 @@ public class ShiroConf {
     @Bean
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
 //      设置登录跳转的路径  shiroFilterFactoryBean.setLoginUrl();
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
         // AnonymousFilter 匿名过滤器 anon
         // FormAuthenticationFilter 认证过滤器 authc
-//        map.put("/**","authc");
-//        map.put("/index.jsp","anon");
-//        map.put("/user/login","anon");
+        map.put("/**", "authc");
+        map.put("/index.jsp", "anon");
+        map.put("/user/login", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;
     }
@@ -39,8 +40,9 @@ public class ShiroConf {
         securityManager.setRealm(myReadm);
         return securityManager;
     }
+
     @Bean
-    public MyReadm getMyRealm(CredentialsMatcher credentialsMatcher, CacheManager cacheManager){
+    public MyReadm getMyRealm(CredentialsMatcher credentialsMatcher, CacheManager cacheManager) {
         MyReadm myRealm = new MyReadm();
         myRealm.setCredentialsMatcher(credentialsMatcher);
         myRealm.setCacheManager(cacheManager);
@@ -48,11 +50,12 @@ public class ShiroConf {
     }
 
     /**
-     *凭据匹配器 也就是密码加密方式，和加密的次数
+     * 凭据匹配器 也就是密码加密方式，和加密的次数
+     *
      * @return
      */
     @Bean
-    public CredentialsMatcher getCredentialsMatcher(){
+    public CredentialsMatcher getCredentialsMatcher() {
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName("MD5");
         credentialsMatcher.setHashIterations(1024);
@@ -61,10 +64,11 @@ public class ShiroConf {
 
     /**
      * 开启shiro缓存，减少对数据库的访问
+     *
      * @return
      */
     @Bean
-    public CacheManager getCacheManager(){
+    public CacheManager getCacheManager() {
         CacheManager cacheManager = new EhCacheManager();
         return cacheManager;
     }
